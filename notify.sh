@@ -339,9 +339,6 @@ generate_email_header()
 	Changes have been pushed for the repository "${REPO_DIR##*/}".
 	EOF
 
-  if [ -n "$projectdesc" ]; then
-		echo "($projectdesc)"
-	fi
 	echo
 
 	if [ -n "$clone_url" ]; then
@@ -938,33 +935,30 @@ SECTEND="-----------------------------------------------------------------------
 SECTSEP="- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 
 # --- Config
-# Set GIT_DIR either from the working directory, or from the environment
-# variable.
-GIT_DIR=$(git rev-parse --git-dir 2>/dev/null)
-if [ -z "$GIT_DIR" ]; then
-	echo >&2 "fatal: post-receive: GIT_DIR not set"
+if [ -z "$REPO_DIR" ]; then
+	echo >&2 "fatal: post-receive: REPO_DIR not set"
 	exit 1
 fi
-REPO_DIR=$(readlink -f $GIT_DIR)
+pushd $REPO_DIR
+GIT_DIR=$(git rev-parse --git-dir 2>/dev/null)
+popd
 
-projectdesc=$(sed -ne '1p' "$GIT_DIR/description")
-# Check if the description is unchanged from it's default, and shorten it to
-# a more manageable length if it is
-if expr "$projectdesc" : "Unnamed repository.*$" >/dev/null
-then
-	projectdesc="UNNAMED PROJECT"
+REPO_NAME=$4
+
+# defaults
+recipients="hofmann@kbsg.rwth-aachen.de"
+announcerecipients=""
+emailprefix="[SCM] "
+custom_showrev=""
+authors_file=AUTHORS
+gitweb_url="https://github.com/$REPO_NAME"
+tree_url="$gitweb_url/tree"
+trac_url="https://github.com/$REPO_NAME/issues"
+clone_url="https://github.com/$REPO_NAME.git"
+
+if [ -f repos/$REPO_NAME/config ] ; then
+  . repos/$REPO_NAME/config
 fi
-
-recipients=$(git config hooks.mailinglist)
-announcerecipients=$(git config hooks.announcelist)
-emailprefix=$(git config hooks.emailprefix || echo '[SCM] ')
-custom_showrev=$(git config hooks.showrev)
-authors_file=$(git config hooks.authorsfile)
-envelope_email=$(git config hooks.defaultsenderemail)
-envelope_name=$(git config hooks.defaultsendername)
-gitweb_url=$(git config hooks.gitweburl)
-trac_url=$(git config hooks.tracurl)
-clone_url=$(git config hooks.cloneurl)
 
 if [ -z "$envelope_email" ]; then
 	envelope_email="noreply@fawkesrobotics.org"
@@ -975,6 +969,8 @@ fi
 if [ -z "$clone_url" ]; then
 	clone_url="git@git.fawkesrobotics.org:${REPO_DIR##*/}"
 fi
+
+pushd $REPO_DIR
 
 # Check if we can determine a sender from the push user setting
 determine_sender
@@ -996,3 +992,4 @@ else
 	done
 fi
 
+popd
