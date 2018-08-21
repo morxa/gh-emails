@@ -28,8 +28,7 @@ def on_push(data):
     full_name =  data['repository']['full_name']
     script_env['REPO_DIR'] = os.path.join(script_env['PWD'], 'git', full_name)
     cmd = ['notify.sh', data['ref'], data['before'], data['after'], full_name]
-    subprocess.Popen(cmd, env=script_env, stdout=subprocess.PIPE,
-                     stderr=subprocess.STDOUT)
+    subprocess.Popen(cmd, env=script_env, stdout=None, stderr=None)
     return "Processed push to {}.".format(full_name)
 
 if __name__ == '__main__':
