@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Copyright (c) 2007 Andy Parkins
 # Copyright (c) 2009 Tim Niemueller (pimped the script for our needs)
