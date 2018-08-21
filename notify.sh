@@ -979,10 +979,7 @@ determine_sender
 # Allow dual mode: run from the command line just like the update hook, or
 # if no arguments are given then run as a hook script
 if [ -n "$1" -a -n "$2" -a -n "$3" ]; then
-	# Output to the terminal in command line mode - if someone wanted to
-	# resend an email; they could redirect the output to sendmail
-	# themselves
-	PAGER= generate_email $2 $3 $1
+	generate_email $2 $3 $1 | send_mail "$envelope_mail" "$envelope_name"
 else
 	while read oldrev newrev refname
 	do
