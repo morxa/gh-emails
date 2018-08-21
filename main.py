@@ -16,7 +16,7 @@ import os
 import subprocess
 
 app = flask.Flask(__name__)
-webhook = github_webhook.Webhook(app)
+webhook = github_webhook.Webhook(app, secret=os.environ.get('GITHUB_SECRET'))
 
 @app.route('/')
 def hello_world():
