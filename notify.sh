@@ -336,7 +336,7 @@ generate_email_header()
 	X-Git-Newrev: $newrev
 	X-Gitosis-User: $GITOSIS_USER
 
-	Changes have been pushed for the repository "${REPO_DIR##*/}".
+	Changes have been pushed for the repository "$REPO_NAME".
 	EOF
 
 	echo
