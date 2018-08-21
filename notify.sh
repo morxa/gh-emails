@@ -943,9 +943,6 @@ if [ -z "$REPO_DIR" ]; then
 	echo >&2 "fatal: post-receive: REPO_DIR not set"
 	exit 1
 fi
-pushd $REPO_DIR
-GIT_DIR=$(git rev-parse --git-dir 2>/dev/null)
-popd
 
 REPO_NAME=$4
 
