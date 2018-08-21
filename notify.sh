@@ -935,6 +935,10 @@ SECTEND="-----------------------------------------------------------------------
 SECTSEP="- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 
 # --- Config
+if [ -z "$REPO_CONFIG_DIR" ]; then
+  echo >&2 "fatal: REPO_CONFIG_DIR not set"
+  exit 1
+fi
 if [ -z "$REPO_DIR" ]; then
 	echo >&2 "fatal: post-receive: REPO_DIR not set"
 	exit 1
@@ -956,8 +960,8 @@ tree_url="$gitweb_url/tree"
 trac_url="https://github.com/$REPO_NAME/issues"
 clone_url="https://github.com/$REPO_NAME.git"
 
-if [ -f repos/$REPO_NAME/config ] ; then
-  . repos/$REPO_NAME/config
+if [ -f $REPO_CONFIG_DIR/$REPO_NAME/config ] ; then
+  . $REPO_CONFIG_DIR/$REPO_NAME/config
 fi
 
 if [ -z "$envelope_email" ]; then
