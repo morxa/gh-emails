@@ -953,9 +953,6 @@ fi
 if [ -z "$envelope_name" ]; then
 	envelope_name="Fawkes SCM"
 fi
-if [ -z "$clone_url" ]; then
-	clone_url="git@git.fawkesrobotics.org:${REPO_DIR##*/}"
-fi
 
 # Set up local repo copy
 
