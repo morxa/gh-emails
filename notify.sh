@@ -347,9 +347,6 @@ generate_email_header()
 	if [ -n "$gitweb_url" ]; then
 		echo "Gitweb: $gitweb_url"
 	fi
-	if [ -n "$trac_url" ]; then
-		echo "Trac:   $trac_url"
-	fi
 
 	echo -e "\nThe $refname_type, $short_refname has been ${change_type}d"
 }
@@ -860,11 +857,6 @@ show_new_revisions()
 					echo "$gitweb_url/commit/$s"
 				done
 			fi
-			if [ -n "$trac_url" ]; then
-				for s in $shortrev; do
-					echo "$trac_url/changeset/$s"
-				done
-			fi
 			echo
 			echo $SECTSEP
 		done
@@ -878,11 +870,6 @@ show_new_revisions()
 			if [ -n "$gitweb_url" ]; then
 				for s in $shortrev; do
 					echo "$gitweb_url/commit/$s"
-				done
-			fi
-			if [ -n "$trac_url" ]; then
-				for s in $shortrev; do
-					echo "$trac_url/changeset/$s"
 				done
 			fi
 			echo
@@ -954,7 +941,6 @@ custom_showrev=""
 authors_file=AUTHORS
 gitweb_url="https://github.com/$REPO_NAME"
 tree_url="$gitweb_url/tree"
-trac_url="https://github.com/$REPO_NAME/issues"
 clone_url="https://github.com/$REPO_NAME.git"
 
 if [ -f $REPO_CONFIG_DIR/$REPO_NAME/config ] ; then
