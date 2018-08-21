@@ -27,9 +27,6 @@ def on_push(data):
     script_env = os.environ.copy()
     full_name =  data['repository']['full_name']
     script_env['REPO_DIR'] = os.path.join(script_env['PWD'], 'git', full_name)
-    subprocess.run(
-        ['set_up_git.sh', data['repository']['clone_url'], data['after']],
-        env=script_env, check=True)
     subprocess.run(['notify.sh', data['ref'], data['before'], data['after'],
                     full_name],
                    env=script_env, check=True)

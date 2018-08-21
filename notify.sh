@@ -974,7 +974,17 @@ if [ -z "$clone_url" ]; then
 	clone_url="git@git.fawkesrobotics.org:${REPO_DIR##*/}"
 fi
 
+# Set up local repo copy
+
+if [ -z $REPO_DIR ] ; then
+  mkdir -p $REPO_DIR
+  pushd $REPO_DIR
+  git clone --bare $clone_url
+  popd
+fi
+
 pushd $REPO_DIR
+git fetch --tags
 
 # Check if we can determine a sender from the push user setting
 determine_sender
