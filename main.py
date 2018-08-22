@@ -26,7 +26,9 @@ def hello_world():
 def on_push(data):
     script_env = os.environ.copy()
     full_name =  data['repository']['full_name']
-    script_env['REPO_DIR'] = os.path.join(script_env['PWD'], 'git', full_name)
+    repos_dir = os.environ.get('REPOS_DIR',
+                               os.path.join(os.environ.get('PWD'), 'git'))
+    script_env['REPO_DIR'] = os.path.join(repos_dir, full_name)
     cmd = ['notify.sh', data['ref'], data['before'], data['after'], full_name]
     subprocess.Popen(cmd, env=script_env, stdout=None, stderr=None)
     return "Processed push to {}.".format(full_name)
