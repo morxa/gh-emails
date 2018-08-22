@@ -372,7 +372,7 @@ generate_create_branch_email()
 	echo "        at  $newrev ($newrev_type)"
 	echo ""
 	if [ -n "$gitweb_url" ]; then
-		echo "$gitweb_url/$short_refname"
+		echo "$gitweb_url/tree/$short_refname"
 		echo ""
 	fi
 
@@ -570,7 +570,7 @@ generate_update_branch_email()
 
 	echo ""
 	if [ -n "$gitweb_url" ]; then
-		echo "$gitweb_url/$short_refname"
+		echo "$gitweb_url/tree/$short_refname"
 		echo ""
 	fi
 
