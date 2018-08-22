@@ -353,12 +353,7 @@ generate_email_header()
 
 generate_email_footer()
 {
-	SPACE=" "
-	cat <<-EOF
-
-	--${SPACE}
-	Fawkes Robotics Framework                 http://www.fawkesrobotics.org
-	EOF
+  return
 }
 
 # --------------- Branches
