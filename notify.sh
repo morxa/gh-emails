@@ -942,6 +942,14 @@ if [ -f $REPO_CONFIG_DIR/$REPO_NAME/config ] ; then
   . $REPO_CONFIG_DIR/$REPO_NAME/config
 fi
 
+if [ ! -z "$ssh_key" ] ; then
+  # Strip any path prefix, ssh_key must be in $REPO_CONFIG_DIR/$REPO_NAME/
+  key_file="$REPO_CONFIG_DIR/$REPO_NAME/$(basename $ssh_key)"
+  echo "Using SSH key $key_file"
+  GIT_SSH_COMMAND="ssh -i $key_file -o IdentitiesOnly=yes"
+  export GIT_SSH_COMMAND
+fi
+
 if [ -z "$envelope_email" ]; then
 	envelope_email="noreply@fawkesrobotics.org"
 fi
