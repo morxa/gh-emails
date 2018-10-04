@@ -894,6 +894,10 @@ determine_sender()
     if [ "$github_name" != "null" ] ; then
       envelope_name=$github_name
     fi
+    echo "Looking for name of committer $PUSHER in file $authors_file"
+    if [ ! -e $authors_file ] ; then
+      return
+    fi
     if [[ $authors_file == *.csv ]]; then
       # new file format:
       # name;email[,email...];github-handle;branch[,branch...]
