@@ -1005,11 +1005,12 @@ if [ -n "$committer_clone_url" ] ; then
     echo "Setting up committer repo"
     echo "Cloning $committer_clone_url to $COMMITTER_REPO_DIR"
     mkdir -p $(realpath -m $COMMITTER_REPO_DIR/..)
-    git clone --mirror $committer_clone_url $COMMITTER_REPO_DIR
+    git clone $committer_clone_url $COMMITTER_REPO_DIR
   fi
   pushd $COMMITTER_REPO_DIR
   echo "Updating committer repo in $COMMITTER_REPO_DIR"
-  git fetch --tags
+  git fetch
+  git reset --hard origin/master
   popd
   # author_file is within the committer repo, update to full path
   authors_file=$COMMITTER_REPO_DIR/$authors_file
