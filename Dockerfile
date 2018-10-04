@@ -10,7 +10,7 @@
 
 FROM tiangolo/uwsgi-nginx-flask:python3.6
 
-RUN apt-get update && apt-get -y install git ssmtp 
+RUN apt-get update && apt-get -y install git ssmtp curl jq
 COPY ssmtp.conf /etc/ssmtp/
 RUN pip install github-webhook
 RUN bash -c "ssh-keyscan github.com 2>&1 | tee /etc/ssh/ssh_known_hosts"
