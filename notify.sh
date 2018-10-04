@@ -890,7 +890,7 @@ send_mail()
 determine_sender()
 {
   if [ -n "$PUSHER" ]; then
-    if [ "$authors_file" == "*.csv" ]; then
+    if [[ $authors_file == *.csv ]]; then
       # new file format:
       # name;email[,email...];github-handle;branch[,branch...]
       OIFS=$IFS
