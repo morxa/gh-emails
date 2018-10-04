@@ -889,20 +889,46 @@ send_mail()
 
 determine_sender()
 {
-	if [ -n "$PUSHER" ]; then
-		OIFS=$IFS
-		IFS=$'\n'
-		for l in $(sed -e 's/^\([^;#][^=]\+\) = \([^<]\+\) <\([^>]\+\)>/\1:\2:\3/' $authors_file); do
-        		OIFSF=$IFS
-        		IFS=:
-        		declare -a AUTHOR=($l)
-        		IFS=$OIFSF
-			if [ "${AUTHOR[0]}" = "$PUSHER" ] || [[ "${AUTHOR[0]}" = ".$PUSHER" ]]; then
-				envelope_name=${AUTHOR[1]}
-				envelope_email=${AUTHOR[2]}
-			fi
-		done
-		IFS=$OIFS
+  if [ -n "$PUSHER" ]; then
+    if [ "$authors_file" == "*.csv" ]; then
+      # new file format:
+      # name;email[,email...];github-handle;branch[,branch...]
+      OIFS=$IFS
+      IFS=$'\n'
+      for line in $(cat $authors_file); do
+        if [[ "$line" =~ ^# ]]; then continue; fi
+        OIFSF=$IFS
+        IFS=";"
+        # Temporarily disable pathname expansion, could expand branch patterns
+        set -f
+        declare -a AUTHOR=($line)
+        set +f
+        IFS=$OIFSF
+
+        AUTHOR_NAME="${AUTHOR[0]}"
+        AUTHOR_GITHUB="${AUTHOR[2]}"
+        if [ "$AUTHOR_GITHUB" == "$PUSHER" ]; then
+          envelope_name=$AUTHOR_NAME
+          break
+        fi
+      done
+      IFS=$OIFS
+    else
+      # old file format:
+      # handle = Full Name <email@domain.tld>
+		  OIFS=$IFS
+		  IFS=$'\n'
+		  for l in $(sed -e 's/^\([^;#][^=]\+\) = \([^<]\+\) <\([^>]\+\)>/\1:\2:\3/' $authors_file); do
+        OIFSF=$IFS
+        IFS=:
+        declare -a AUTHOR=($l)
+        IFS=$OIFSF
+        if [ "${AUTHOR[0]}" = "$PUSHER" ] || [[ "${AUTHOR[0]}" = ".$PUSHER" ]]; then
+          envelope_name=${AUTHOR[1]}
+        fi
+		  done
+		  IFS=$OIFS
+    fi
 	fi
 }
 
