@@ -334,7 +334,7 @@ generate_email_header()
 	X-Git-Reftype: $refname_type
 	X-Git-Oldrev: $oldrev
 	X-Git-Newrev: $newrev
-	X-Gitosis-User: $GITOSIS_USER
+	X-Git-Pusher: $PUSHER
 
 	Changes have been pushed for the repository "$REPO_NAME".
 	EOF
@@ -889,7 +889,7 @@ send_mail()
 
 determine_sender()
 {
-	if [ -n "$GITOSIS_USER" ]; then
+	if [ -n "$PUSHER" ]; then
 		OIFS=$IFS
 		IFS=$'\n'
 		for l in $(sed -e 's/^\([^;#][^=]\+\) = \([^<]\+\) <\([^>]\+\)>/\1:\2:\3/' $authors_file); do
@@ -897,7 +897,7 @@ determine_sender()
         		IFS=:
         		declare -a AUTHOR=($l)
         		IFS=$OIFSF
-			if [ "${AUTHOR[0]}" = "$GITOSIS_USER" ] || [[ "${AUTHOR[0]}" = ".$GITOSIS_USER" ]]; then
+			if [ "${AUTHOR[0]}" = "$PUSHER" ] || [[ "${AUTHOR[0]}" = ".$PUSHER" ]]; then
 				envelope_name=${AUTHOR[1]}
 				envelope_email=${AUTHOR[2]}
 			fi
@@ -927,6 +927,7 @@ if [ -z "$REPO_DIR" ]; then
 fi
 
 REPO_NAME=$4
+PUSHER=$5
 
 # defaults
 recipients="hofmann@kbsg.rwth-aachen.de"
