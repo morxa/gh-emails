@@ -890,6 +890,10 @@ send_mail()
 determine_sender()
 {
   if [ -n "$PUSHER" ]; then
+    github_name=$(curl -s https://api.github.com/users/$PUSHER | jq .name)
+    if [ "$github_name" != "null" ] ; then
+      envelope_name=$github_name
+    fi
     if [[ $authors_file == *.csv ]]; then
       # new file format:
       # name;email[,email...];github-handle;branch[,branch...]
