@@ -973,7 +973,8 @@ if [ -f $REPO_CONFIG_DIR/$REPO_NAME/config ] ; then
   . $REPO_CONFIG_DIR/$REPO_NAME/config
 fi
 
-if [ ! -z "$ssh_key" ] ; then
+GIT_SSH_COMMAND=""
+if [ -n "$ssh_key" ] ; then
   # Strip any path prefix, ssh_key must be in $REPO_CONFIG_DIR/$REPO_NAME/
   key_file="$REPO_CONFIG_DIR/$REPO_NAME/$(basename $ssh_key)"
   echo "Using SSH key $key_file"
@@ -991,6 +992,15 @@ fi
 # Set up committers repo
 if [ -n "$committer_clone_url" ] ; then
   COMMITTER_REPO_DIR=$(realpath -m $REPO_DIR/../$(basename $REPO_NAME)_committers)
+  if [ -n "$committers_ssh_key" ] ; then
+    # Save old SSH command used for main repository
+    OLD_GIT_SSH_COMMAND=$GIT_SSH_COMMAND
+    # Strip any path prefix, ssh_key must be in $REPO_CONFIG_DIR/$REPO_NAME/
+    key_file="$REPO_CONFIG_DIR/$REPO_NAME/$(basename $committers_ssh_key)"
+    echo "Using SSH key $key_file for notifications"
+    GIT_SSH_COMMAND="ssh -i $key_file -o IdentitiesOnly=yes"
+    export GIT_SSH_COMMAND
+  fi
   if [ ! -d $COMMITTER_REPO_DIR ] ; then
     echo "Setting up committer repo"
     echo "Cloning $committer_clone_url to $COMMITTER_REPO_DIR"
@@ -1004,6 +1014,11 @@ if [ -n "$committer_clone_url" ] ; then
   # author_file is within the committer repo, update to full path
   authors_file=$COMMITTER_REPO_DIR/$authors_file
   echo "Authors file is $authors_file"
+  if [ -n "$OLD_GIT_SSH_COMMAND" ] ; then
+    # restore SSH command for main repository
+    GIT_SSH_COMMAND=$OLD_GIT_SSH_COMMAND
+    export GIT_SSH_COMMAND
+  fi
 fi
 
 
