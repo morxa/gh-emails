@@ -957,6 +957,25 @@ if [ -z "$envelope_name" ]; then
 	envelope_name="Fawkes SCM"
 fi
 
+# Set up committers repo
+if [ -n "$committer_clone_url" ] ; then
+  COMMITTER_REPO_DIR=$(realpath -m $REPO_DIR/../$(basename $REPO_NAME)_committers)
+  if [ ! -d $COMMITTER_REPO_DIR ] ; then
+    echo "Setting up committer repo"
+    echo "Cloning $committer_clone_url to $COMMITTER_REPO_DIR"
+    mkdir -p $(realpath -m $COMMITTER_REPO_DIR/..)
+    git clone --mirror $committer_clone_url $COMMITTER_REPO_DIR
+  fi
+  pushd $COMMITTER_REPO_DIR
+  echo "Updating committer repo in $COMMITTER_REPO_DIR"
+  git fetch --tags
+  popd
+  # author_file is within the committer repo, update to full path
+  authors_file=$COMMITTER_REPO_DIR/$authors_file
+  echo "Authors file is $authors_file"
+fi
+
+
 # Set up local repo copy
 
 if [ ! -d $REPO_DIR ] ; then
