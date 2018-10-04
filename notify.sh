@@ -930,6 +930,9 @@ determine_sender()
 		  IFS=$OIFS
     fi
 	fi
+  if [ -n "$PUSHER_EMAIL" ]; then
+    envelope_email=$PUSHER_EMAIL
+  fi
 }
 
 # ---------------------------- main()
@@ -954,6 +957,7 @@ fi
 
 REPO_NAME=$4
 PUSHER=$5
+PUSHER_EMAIL=$6
 
 # defaults
 recipients="hofmann@kbsg.rwth-aachen.de"
