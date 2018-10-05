@@ -889,6 +889,9 @@ send_mail()
 
 determine_sender()
 {
+  if [ -n "$PUSHER_EMAIL" ]; then
+    envelope_email=$PUSHER_EMAIL
+  fi
   if [ -n "$PUSHER" ]; then
     github_name=$(curl -s https://api.github.com/users/$PUSHER | jq .name)
     if [ "$github_name" != "null" ] ; then
@@ -917,6 +920,11 @@ determine_sender()
         AUTHOR_GITHUB="${AUTHOR[2]}"
         if [ "$AUTHOR_GITHUB" == "$PUSHER" ]; then
           envelope_name=$AUTHOR_NAME
+          OIFSF=$IFS
+          IFS=","
+          AUTHOR_EMAILS=(${AUTHOR[1]})
+          envelope_email=${AUTHOR_EMAILS[0]}
+          IFS=$OIFSF
           break
         fi
       done
@@ -938,9 +946,6 @@ determine_sender()
 		  IFS=$OIFS
     fi
 	fi
-  if [ -n "$PUSHER_EMAIL" ]; then
-    envelope_email=$PUSHER_EMAIL
-  fi
 }
 
 # ---------------------------- main()
