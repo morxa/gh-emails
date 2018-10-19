@@ -8,7 +8,7 @@
 #
 #*****************************************************************************
 
-FROM tiangolo/uwsgi-nginx-flask:python3.6
+FROM tiangolo/uwsgi-nginx-flask:python3.7
 
 RUN apt-get update && apt-get -y install git ssmtp curl jq
 COPY ssmtp.conf /etc/ssmtp/
